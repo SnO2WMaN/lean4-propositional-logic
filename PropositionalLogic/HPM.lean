@@ -42,11 +42,11 @@ lemma IConj {φ ψ : L} : (Γ ⊢ φ) → (Γ ⊢ ψ) → (Γ ⊢ (φ ∧' ψ)) 
   intro hφ hψ;
   exact MP (MP (axiomIConj _ _ _) hφ) hψ;
 
-lemma EConj₁ {φ ψ : L} : (Γ ⊢ (φ ∧' ψ)) → (Γ ⊢ φ) := by
+lemma EConj₁ {φ₁ φ₂ : L} : (Γ ⊢ (φ₁ ∧' φ₂)) → (Γ ⊢ φ₁) := by
   intro h;
   exact MP (axiomEConj₁ _ _ _) h;
 
-lemma EConj₂ {φ ψ : L} : (Γ ⊢ (φ ∧' ψ)) → (Γ ⊢ ψ) := by
+lemma EConj₂ {φ₁ φ₂ : L} : (Γ ⊢ (φ₁ ∧' φ₂)) → (Γ ⊢ φ₂) := by
   intro h;
   exact MP (axiomEConj₂ _ _ _) h;
 

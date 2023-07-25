@@ -58,10 +58,6 @@ theorem deduction {Γ : Context L} {φ ψ : L} : (Γ ⊢ (φ →' ψ)) ↔ ((Γ 
 
 variable (Γ : Context L) (φ ψ χ : L)
 
-theorem commAxiomK : (Γ ⊢ φ) → (Γ ⊢ (φ →' ψ) →' φ) := by
-  intro h;
-  simp [deduction];
-
 theorem DNI : (Γ ⊢ (φ →' ¬'¬'φ)) := by
   simp [deduction];
   have s1 : Γ ∪ {φ} ∪ {φ →' ⊥'} ⊢ φ := by simp;
