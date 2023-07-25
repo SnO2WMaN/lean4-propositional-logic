@@ -52,10 +52,10 @@ class HasEFQ [HasArrow L] [HasBot L] where
   axiomEFQ (Γ : Context L) φ : Γ ⊢ (⊥' →' φ)
 
 class HasCon₃ [HasArrow L] [HasLnot L] where
-  axiomCon₃ (Γ : Context L) φ : Γ ⊢ (¬'φ →' ψ) →' (¬'ψ →' φ)
+  axiomCon₃ (Γ : Context L) φ ψ : Γ ⊢ (¬'φ →' ψ) →' (¬'ψ →' φ)
 
 class HasCon₄ [HasArrow L] [HasLnot L] where
-  axiomCon₄ (Γ : Context L) φ : Γ ⊢ (¬'φ →' ¬'ψ) →' (ψ →' φ)
+  axiomCon₄ (Γ : Context L) φ ψ : Γ ⊢ (¬'φ →' ¬'ψ) →' (ψ →' φ)
 
 class HasDNE [HasArrow L] [HasLnot L] where
   axiomDNE (Γ : Context L) φ : Γ ⊢ (¬'¬'φ →' φ)

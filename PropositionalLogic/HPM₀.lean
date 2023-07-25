@@ -31,8 +31,8 @@ lemma weakenImp (φ : L) : (Γ ⊢ ψ) → (Γ ⊢ (φ →' ψ)) := by exact λ 
 
 lemma weakenContext (Γ Δ : Context L) (hs : Γ ⊆ Δ) : (Γ ⊢ φ) → (Δ ⊢ φ) := by sorry
 
-lemma weakenContext' {Γ : Context L} : (⊢ φ) → (Γ ⊢ φ) := weakenContext ∅ Γ (by simp)
-instance {Γ : Context L} : Coe (⊢ φ) (Γ ⊢ φ) := ⟨weakenContext'⟩
+lemma weakenContext' (Γ : Context L) : (⊢ φ) → (Γ ⊢ φ) := weakenContext ∅ Γ (by simp)
+instance (Γ : Context L) : Coe (⊢ φ) (Γ ⊢ φ) := ⟨weakenContext' Γ⟩
 
 lemma id_imp' (φ : L) : ⊢ (φ →' φ) := by
   have s1 : ⊢ (φ →' (φ →' φ) →' φ) := by apply axiomK;
@@ -48,7 +48,6 @@ lemma id_imp (φ : L) : Γ ⊢ (φ →' φ) := ↑(HPM₀.id_imp' φ)
 @[simp]
 lemma id (φ : L) : {φ} ⊢ φ := context _ _ (by simp)
 
-@[simp]
 theorem deduction {Γ : Context L} {φ ψ : L} : (Γ ⊢ (φ →' ψ)) ↔ ((Γ ∪ {φ}) ⊢ ψ) := by
   apply Iff.intro
   . intro h;
@@ -57,37 +56,43 @@ theorem deduction {Γ : Context L} {φ ψ : L} : (Γ ⊢ (φ →' ψ)) ↔ ((Γ 
     exact MP h1 h2;
   . admit
 
-lemma DNI (φ : L) : (⊢ (φ →' ¬'¬'φ)) := by
-  simp;
-  have s1 : {φ} ∪ {φ →' ⊥'} ⊢ φ := by simp;
-  have s2 : {φ} ∪ {φ →' ⊥'} ⊢ φ →' ⊥' := by simp;
+variable (Γ : Context L) (φ ψ χ : L)
+
+theorem commAxiomK : (Γ ⊢ φ) → (Γ ⊢ (φ →' ψ) →' φ) := by
+  intro h;
+  simp [deduction];
+
+theorem DNI : (Γ ⊢ (φ →' ¬'¬'φ)) := by
+  simp [deduction];
+  have s1 : Γ ∪ {φ} ∪ {φ →' ⊥'} ⊢ φ := by simp;
+  have s2 : Γ ∪ {φ} ∪ {φ →' ⊥'} ⊢ φ →' ⊥' := by simp;
   have s3 := MP s2 s1;
   assumption;
 
-lemma CM₁ (φ : L) : (⊢ (φ →' ¬'φ) →' ¬'φ) := by
-  simp;
-  have s1 : {φ →' φ →' ⊥'} ∪ {φ} ⊢ φ →' φ →' ⊥' := by simp;
-  have s2 : {φ →' φ →' ⊥'} ∪ {φ} ⊢ φ := by simp;
+theorem CM₁ : (Γ ⊢ (φ →' ¬'φ) →' ¬'φ) := by
+  simp [deduction];
+  have s1 : Γ ∪ {φ →' φ →' ⊥'} ∪ {φ} ⊢ φ →' φ →' ⊥' := by simp;
+  have s2 : Γ ∪ {φ →' φ →' ⊥'} ∪ {φ} ⊢ φ := by simp;
   have s3 := MP s1 s2;
   have s4 := MP s3 s2;
   assumption;
 
-lemma RAA (φ : L) : (⊢ (φ →' ⊥') →' ¬'φ) := by simp;
+theorem RAA : (Γ ⊢ (φ →' ⊥') →' ¬'φ) := by simp;
 
-lemma Con₁ (φ ψ : L) : (⊢ (φ →' ψ) →' (¬'ψ →' ¬'φ)) := by
-  simp;
-  have s1 : {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ φ := by simp;
-  have s2 : {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ φ →' ψ := by simp;
-  have s3 : {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ ψ →' ⊥' := by simp;
+theorem Con₁ : (Γ ⊢ (φ →' ψ) →' (¬'ψ →' ¬'φ)) := by
+  simp [deduction];
+  have s1 : Γ ∪ {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ φ := by simp;
+  have s2 : Γ ∪ {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ φ →' ψ := by simp;
+  have s3 : Γ ∪ {φ →' ψ} ∪ {ψ →' ⊥'} ∪ {φ} ⊢ ψ →' ⊥' := by simp;
   have s4 := MP s2 s1;
   have s5 := MP s3 s4;
   assumption;
 
-lemma Con₂ (φ ψ : L) : (⊢ (φ →' ¬'ψ) →' (ψ →' ¬'φ)) := by
-  simp;
-  have s1 : {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ φ := by simp;
-  have s2 : {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ ψ := by simp;
-  have s3 : {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ φ →' ψ →' ⊥' := by simp;
+theorem Con₂ : (Γ ⊢ (φ →' ¬'ψ) →' (ψ →' ¬'φ)) := by
+  simp [deduction];
+  have s1 : Γ ∪ {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ φ := by simp;
+  have s2 : Γ ∪ {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ ψ := by simp;
+  have s3 : Γ ∪ {φ →' ψ →' ⊥'} ∪ {ψ} ∪ {φ} ⊢ φ →' ψ →' ⊥' := by simp;
   have s4 := MP s3 s1;
   have s5 := MP s4 s2;
   assumption;

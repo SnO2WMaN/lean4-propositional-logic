@@ -5,6 +5,7 @@ import PropositionalLogic.HPM₀
 namespace PropositionalLogic
 
 open Finset Notation HilbertSystem
+attribute [-simp] union_assoc
 
 class HPM
   (L : Type u) [DecidableEq L]
@@ -50,7 +51,7 @@ lemma EConj₂ {φ ψ : L} : (Γ ⊢ (φ ∧' ψ)) → (Γ ⊢ ψ) := by
   exact MP (axiomEConj₂ _ _ _) h;
 
 lemma lnc (φ : L) : (⊢ ¬'(φ ∧' ¬'φ)) := by
-  simp;
+  simp [deduction];
   have s1 : {φ ∧' (φ →' ⊥')} ⊢ φ ∧' (φ →' ⊥') := context _ _ (by simp);
   have s2 : {φ ∧' (φ →' ⊥')} ⊢ (φ ∧' (φ →' ⊥') →' φ) := by apply axiomEConj₁;
   have s3 : {φ ∧' (φ →' ⊥')} ⊢ (φ ∧' (φ →' ⊥') →' (φ →' ⊥')) := by apply axiomEConj₂;
@@ -60,7 +61,7 @@ lemma lnc (φ : L) : (⊢ ¬'(φ ∧' ¬'φ)) := by
   assumption;
 
 lemma disjComm (φ ψ : L) : (⊢ (φ ∨' ψ) →' (ψ ∨' φ)) := by
-  simp;
+  simp [deduction];
   have s1 : {φ ∨' ψ} ⊢ φ ∨' ψ := by simp;
   have s2 : {φ ∨' ψ} ⊢ φ →' (ψ ∨' φ) := by apply axiomIDisj₂;
   have s3 : {φ ∨' ψ} ⊢ ψ →' (ψ ∨' φ) := by apply axiomIDisj₁;
@@ -68,7 +69,7 @@ lemma disjComm (φ ψ : L) : (⊢ (φ ∨' ψ) →' (ψ ∨' φ)) := by
   assumption;
 
 lemma conjComm (φ ψ : L) : (⊢ (φ ∧' ψ) →' (ψ ∧' φ)) := by
-  simp;
+  simp [deduction];
   have s1 : {φ ∧' ψ} ⊢ φ ∧' ψ := by simp;
   have s2 := EConj₂ s1;
   have s3 := EConj₁ s1;
@@ -76,7 +77,7 @@ lemma conjComm (φ ψ : L) : (⊢ (φ ∧' ψ) →' (ψ ∧' φ)) := by
   assumption;
 
 lemma ELiff_mp (φ₁ φ₂ : L) : (Γ ⊢ φ₁ ↔' φ₂) → (Γ ⊢ φ₁ →' φ₂):= by
-  simp;
+  simp [deduction];
   intro h;
   have s1 : Γ ∪ {φ₁} ⊢ φ₁ := by simp;
   have s2 : Γ ∪ {φ₁} ⊢ ((φ₁ →' φ₂) ∧' (φ₂ →' φ₁)) →' (φ₁ →' φ₂) := by apply axiomEConj₁;
@@ -86,7 +87,7 @@ lemma ELiff_mp (φ₁ φ₂ : L) : (Γ ⊢ φ₁ ↔' φ₂) → (Γ ⊢ φ₁ �
   assumption;
 
 lemma ELiff_mpr' (φ₁ φ₂ : L) : (Γ ⊢ φ₁ ↔' φ₂) → (Γ ⊢ φ₂ →' φ₁):= by
-  simp;
+  simp [deduction];
   intro h;
   have s1 : Γ ∪ {φ₂} ⊢ φ₂ := by simp;
   have s2 : Γ ∪ {φ₂} ⊢ ((φ₁ →' φ₂) ∧' (φ₂ →' φ₁)) →' (φ₂ →' φ₁) := by apply axiomEConj₂;
@@ -96,7 +97,7 @@ lemma ELiff_mpr' (φ₁ φ₂ : L) : (Γ ⊢ φ₁ ↔' φ₂) → (Γ ⊢ φ₂
   assumption;
 
 lemma ILiff' (φ₁ φ₂ : L) : ((Γ ⊢ φ₁ →' φ₂) ∧ (Γ ⊢ φ₂ →' φ₁)) → (Γ ⊢ φ₁ ↔' φ₂) := by
-  simp [And.intro];
+  simp [And.intro, deduction];
   intro h1 h2;
   have s1 : Γ ⊢ ((φ₁ →' φ₂) →' (φ₂ →' φ₁) →' (φ₁ →' φ₂) ∧' (φ₂ →' φ₁)) := by apply axiomIConj;
   have s2 := MP s1 (deduction.mpr h1);
@@ -105,11 +106,11 @@ lemma ILiff' (φ₁ φ₂ : L) : ((Γ ⊢ φ₁ →' φ₂) ∧ (Γ ⊢ φ₂ �
 
 lemma disjCommLiff (φ ψ : L) : (⊢ (φ ∨' ψ) ↔' (ψ ∨' φ)) := by
   apply ILiff';
-  apply And.intro <;> simp [-deduction, disjComm];
+  apply And.intro <;> simp [ disjComm];
 
 lemma conjCommLiff (φ ψ : L) : (⊢ (φ ∧' ψ) ↔' (ψ ∧' φ)) := by
   apply ILiff';
-  apply And.intro <;> simp [-deduction, conjComm];
+  apply And.intro <;> simp [ conjComm];
 
 lemma distDisj (φ ψ χ : L) : (⊢ (φ ∨' (ψ ∧' χ)) ↔' ((φ ∨' ψ) ∧' (φ ∨' χ))) := by
   apply ILiff';
@@ -161,7 +162,7 @@ lemma duMorganConj (φ ψ : L) : (⊢ ¬'(φ ∨' ψ) ↔' (¬'φ ∧' ¬'ψ)) :
   apply ILiff';
   apply And.intro;
   . sorry
-  . simp;
+  . simp [deduction];
     have h1 : {(φ →' ⊥') ∧' (ψ →' ⊥')} ∪ {φ ∨' ψ} ⊢ (φ →' ⊥') ∧' (ψ →' ⊥') := by simp;
     have h2 : {(φ →' ⊥') ∧' (ψ →' ⊥')} ∪ {φ ∨' ψ} ⊢ φ ∨' ψ := by simp;
     have h3 := (EDisj (EConj₁ h1) (EConj₂ h1));
@@ -170,47 +171,71 @@ lemma duMorganConj (φ ψ : L) : (⊢ ¬'(φ ∨' ψ) ↔' (¬'φ ∧' ¬'ψ)) :
 
 section Extended
 
-open HasLEM in
+instance [HasDNE L] : HasCon₃ L where
+  axiomCon₃ Γ φ ψ := by
+    simp only [deduction];
+    have h1 : Γ ∪ {¬'φ →' ψ} ∪ {¬'ψ} ⊢ ¬'φ →' ψ := by simp;
+    have h2 := MP (Con₁ _ _ _) h1;
+    have h3 : Γ ∪ {¬'φ →' ψ} ∪ {¬'ψ} ⊢ ¬'ψ := by simp;
+    have h4 := MP h2 h3;
+    exact MP (HasDNE.axiomDNE _ _) h4
+
+instance [HasCon₃ L] : HasDNE L where
+  axiomDNE _ _ := MP (HasCon₃.axiomCon₃ _ _ _) (by simp);
+
+instance [HasDNE L] : HasCon₄ L where
+  axiomCon₄ Γ φ ψ := by
+    simp only [deduction];
+    have h1 : Γ ∪ {¬'φ →' ¬'ψ} ∪ {ψ} ⊢ ¬'φ →' ¬'ψ := by simp;
+    have h2 := MP (Con₂ _ _ _) h1;
+    have h3 : Γ ∪ {¬'φ →' ¬'ψ} ∪ {ψ} ⊢ ψ := by simp;
+    have h4 := MP h2 h3;
+    exact MP (HasDNE.axiomDNE _ _) h4
+
+instance [HasCon₄ L] : HasDNE L where
+  axiomDNE _ _ := MP (HasCon₄.axiomCon₄ _ _ _) (DNI _ _);
+
 instance [HasLEM L] : HasCM₂ L where
   axiomCM₂ Γ φ := by
-    simp;
-    have s1 : {(φ →' ⊥') →' φ} ⊢ φ ∨' ¬'φ := by apply axiomLEM;
+    simp only [deduction];
+    have s1 : {(φ →' ⊥') →' φ} ⊢ φ ∨' ¬'φ := by apply HasLEM.axiomLEM;
     have s2 : {(φ →' ⊥') →' φ} ⊢ φ →' φ := by simp;
     have s3 : {(φ →' ⊥') →' φ} ⊢ ¬'φ →' φ := by simp;
     have s4 := MP (EDisj s2 s3) s1;
     exact weakenContext _ _ (by simp) s4
 
-open HasCM₂ in
 instance [HasCM₂ L] : HasLEM L where
-  axiomLEM Γ φ := by admit
+  axiomLEM Γ φ := by
+    admit
 
-open HasTND in
 instance [HasTND L] : HasCM₂ L where
   axiomCM₂ Γ φ := by
-    simp;
+    simp only [deduction];
     have s1 : {(φ →' ⊥') →' φ} ⊢ ¬'φ →' φ := by simp;
-    have s2 : {(φ →' ⊥') →' φ} ⊢ (φ →' φ) →' (¬'φ →' φ) →' φ := by apply axiomTND;
+    have s2 : {(φ →' ⊥') →' φ} ⊢ (φ →' φ) →' (¬'φ →' φ) →' φ := by apply HasTND.axiomTND;
     have s3 := MP s2 (by simp);
     have s4 := MP s3 s1;
     exact weakenContext _ _ (by simp) s4
 
-open HasCM₂ in
 instance [HasCM₂ L] : HasTND L where
-  axiomTND Γ φ := by admit
+  axiomTND Γ φ ψ := by
+    admit
 
-open HasPeirceLaw in
 instance [HasPeirceLaw L] : HasCM₂ L where
   axiomCM₂ Γ φ := by
-    simp [-deduction, eqLnot];
-    exact axiomPeirceLaw Γ φ ⊥';
+    simp [eqLnot];
+    exact HasPeirceLaw.axiomPeirceLaw Γ φ ⊥';
 
-open HasTarskiLaw in
 instance [HasTarskiLaw L] : HasLEM L where
   axiomLEM Γ φ := by
-    simp [-deduction, eqLnot];
-    exact axiomTarskiLaw Γ φ ⊥';
+    simp [eqLnot];
+    exact HasTarskiLaw.axiomTarskiLaw Γ φ ⊥';
 
-open HasPeirceLaw in
+instance [HasTarskiLaw L] : HasPeirceLaw L where
+  axiomPeirceLaw Γ φ ψ := by
+    simp [deduction];
+    exact MP (EDisj (by simp) (by simp)) (HasTarskiLaw.axiomTarskiLaw _ φ ψ);
+
 instance [HasPeirceLaw L] : HasTarskiLaw L where
   axiomTarskiLaw Γ φ ψ := by
     admit
@@ -218,5 +243,13 @@ instance [HasPeirceLaw L] : HasTarskiLaw L where
 end Extended
 
 end HPM
+
+variable
+  (L : Type u) [DecidableEq L] [HilbertSystem L]
+  [HasBot L] [HasArrow L] [HasLnot L] [HasLor L] [HasLand L] [HasLiff L]
+in
+theorem HPM.strongerThanHPM₀ {Γ : Context L} {φ : L}:
+  (HPM₀ L → @HilbertSystem.provable L _ Γ φ) → (HPM L → @HilbertSystem.provable L _ Γ φ) := by
+  sorry
 
 end PropositionalLogic
