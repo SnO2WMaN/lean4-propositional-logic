@@ -1,10 +1,12 @@
-import PropositionalLogic.HilbertSystem
-import PropositionalLogic.HPM₀
-import PropositionalLogic.HPM
+import PropositionalLogic.Notations
+import PropositionalLogic.HilbertSystem.Definitions
+import PropositionalLogic.HilbertSystem.HPM₀
+import PropositionalLogic.HilbertSystem.HPM
+import PropositionalLogic.HilbertSystem.HPJ
 
-namespace PropositionalLogic
+namespace PropositionalLogic.HilbertSystem
 
-open Finset Notation HilbertSystem
+open Finset Notations HilbertSystem
 attribute [-simp] union_assoc
 
 class HPK
@@ -42,4 +44,12 @@ instance : HasCM₂ L := ⟨HasCM₂.axiomCM₂⟩
 
 end HPK
 
-end PropositionalLogic
+variable
+  (L : Type u) [DecidableEq L] [HilbertSystem L]
+  [HasBot L] [HasArrow L] [HasLnot L] [HasLor L] [HasLand L] [HasLiff L]
+in
+theorem stronger : HPJ L → HPK L := by
+  admit
+
+end PropositionalLogic.HilbertSystem
+

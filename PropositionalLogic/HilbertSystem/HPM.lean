@@ -1,10 +1,10 @@
-import PropositionalLogic.Notation
-import PropositionalLogic.HilbertSystem
-import PropositionalLogic.HPM₀
+import PropositionalLogic.Notations
+import PropositionalLogic.HilbertSystem.Definitions
+import PropositionalLogic.HilbertSystem.HPM₀
 
-namespace PropositionalLogic
+namespace PropositionalLogic.HilbertSystem
 
-open Finset Notation HilbertSystem
+open Finset Notations HilbertSystem
 attribute [-simp] union_assoc
 
 class HPM
@@ -250,6 +250,6 @@ variable
 in
 theorem HPM.strongerThanHPM₀ {Γ : Context L} {φ : L}:
   (HPM₀ L → @HilbertSystem.provable L _ Γ φ) → (HPM L → @HilbertSystem.provable L _ Γ φ) := by
-  sorry
+  admit
 
-end PropositionalLogic
+end PropositionalLogic.HilbertSystem

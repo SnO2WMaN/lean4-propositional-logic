@@ -1,13 +1,12 @@
-import Mathlib.Data.Set.Basic
 import Mathlib.Data.Finset.Basic
-import PropositionalLogic.Notation
+import PropositionalLogic.Notations
 
 attribute [simp] Finset.subset_union_left Finset.subset_union_right
 attribute [-simp] Finset.union_assoc
 
 namespace PropositionalLogic
 
-open Finset Notation
+open Finset Notations
 
 variable (L : Type u) [DecidableEq L] [HasMinimalLogicSymbols L]
 
@@ -22,6 +21,8 @@ attribute [simp] HilbertSystem.context
 
 notation:10 Γ " ⊢ " φ => HilbertSystem.provable Γ φ
 notation:11 "⊢ " φ => ∅ ⊢ φ
+
+namespace HilbertSystem
 
 variable (L : Type u) [DecidableEq L] [HilbertSystem L]
 
@@ -77,5 +78,7 @@ class HasTarskiLaw [HasArrow L] [HasLor L] where
 
 lemma insertEmpty {φ : L} : ({φ} ⊢ ψ) → (∅ ∪ {φ} ⊢ ψ) := by simp
 instance {φ : L} : Coe ({φ} ⊢ ψ) (∅ ∪ {φ} ⊢ ψ) := ⟨by simp⟩
+
+end HilbertSystem
 
 end PropositionalLogic

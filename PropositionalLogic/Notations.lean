@@ -1,7 +1,7 @@
 import Lean
 import Mathlib.Data.Set.Basic
 
-namespace PropositionalLogic.Notation
+namespace PropositionalLogic.Notations
 
 variable (α : Type u)
 
@@ -75,4 +75,4 @@ class HasTurnstile (α : Sort _) (β : Sort _) where turnstile : Set α → α �
 infix:10 " ⊢ " => HasTurnstile.turnstile
 -/
 
-end PropositionalLogic.Notation
+end PropositionalLogic.Notations

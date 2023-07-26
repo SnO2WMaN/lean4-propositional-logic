@@ -1,13 +1,13 @@
 import Mathlib.Data.Finset.Basic
-import PropositionalLogic.Notation
-import PropositionalLogic.HilbertSystem
+import PropositionalLogic.Notations
+import PropositionalLogic.HilbertSystem.Definitions
 
 attribute [simp] Finset.subset_union_left Finset.subset_union_right
 attribute [-simp] Finset.union_assoc
 
-namespace PropositionalLogic
+namespace PropositionalLogic.HilbertSystem
 
-open Finset Notation HilbertSystem
+open Finset Notations HilbertSystem
 
 class HPM₀
   (L : Type u)
@@ -95,4 +95,4 @@ theorem Con₂ : (Γ ⊢ (φ →' ¬'ψ) →' (ψ →' ¬'φ)) := by
 
 end HPM₀
 
-end PropositionalLogic
+end PropositionalLogic.HilbertSystem
