@@ -1,5 +1,4 @@
 import Lean
-import Mathlib.Data.Set.Basic
 
 namespace PropositionalLogic.Notations
 
