@@ -204,9 +204,24 @@ instance [HasLEM L] : HasCM₂ L where
     have s4 := MP (EDisj s2 s3) s1;
     exact weakenContext _ _ (by simp) s4
 
+/-
+  https://scrapbox.io/kokuritsukouen/%E6%8E%92%E4%B8%AD%E5%BE%8B%E3%81%AFHPM_+_CM%E2%82%82%E3%81%A7%E8%A8%BC%E6%98%8E%E5%8F%AF%E8%83%BD
+-/
 instance [HasCM₂ L] : HasLEM L where
   axiomLEM Γ φ := by
-    admit
+    have h1 := HasAxiomK.axiomK {φ ∨' ¬'φ →' ⊥'} (φ ∨' ¬'φ →' ⊥') φ;
+    have h2 : {φ ∨' ¬'φ →' ⊥'} ⊢ φ ∨' ¬'φ →' ⊥' := by simp;
+    have h3 := MP h1 h2;
+    have h4 : {φ ∨' ¬'φ →' ⊥'} ⊢ φ →' (φ ∨' ¬'φ ) := by apply axiomIDisj₁;
+    have h5 := HasAxiomS.axiomS {φ ∨' ¬'φ →' ⊥'} φ (φ ∨' ¬'φ ) ⊥';
+    have h6 := MP h5 h3;
+    have h7 := MP h6 h4;
+    have h8 : {φ ∨' ¬'φ →' ⊥'} ⊢ (φ →' ⊥') →' (φ ∨' ¬'φ ) := by simp; apply axiomIDisj₂;
+    have h9 := MP h8 h7;
+    have h10 : ⊢ (φ ∨' ¬'φ →' ⊥') →' (φ ∨' ¬'φ) := deduction.mpr h9;
+    have h11 : ⊢ (((φ ∨' ¬'φ) →' ⊥') →' (φ ∨' ¬'φ)) →' (φ ∨' ¬'φ) := by rw [←eqLnot]; apply HasCM₂.axiomCM₂
+    have h12 := MP h11 h10;
+    exact weakenContext _ _ (by simp) h12;
 
 instance [HasTND L] : HasCM₂ L where
   axiomCM₂ Γ φ := by
